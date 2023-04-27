@@ -2,6 +2,7 @@
 //then we will get that reference here 
 
 import {RegisterInput} from "../../pages/register.page"
+import customFetchBase from "./customFetchBase"
 // import {LoginInput} from "../../pages/login.page"
 
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
@@ -12,12 +13,12 @@ const BASE_URL = process.env.REACT_APP_BACKEND_SERVER_ENDPOINT as string;
 
 export const authApi = createApi({
     reducerPath: "authApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl:`${BASE_URL}/api/auth`,
-    }),
+    baseQuery: customFetchBase,
     endpoints: (builder)=>({
         registerUser: builder.mutation<GenericResponse,RegisterInput>({
             query(data){
+
+                console.log("Performed")
                 return{
                     url:"auth/register",
                     method:"POST",
@@ -33,24 +34,6 @@ export const authApi = createApi({
                 }
             }
         })
-        // loginUser:builder.mutation<{access_token:string;status:string}, LoginInput>({
-        //     query(data){
-        //         return{
-        //             url:"auth/login",
-        //             method:"POST",
-        //             body:data,
-        //             credentials:'include'
-        //         }
-        //     },
-        //     async onQueryStarted(args,{dispatch,queryFulfilled}){
-        //         try{
-        //                // here we will get user details
-        //         }catch(err){}
-        //     }
-        // })
-        // loginYser: "need to use from register page",
-        
-        // logout
     })
 
 

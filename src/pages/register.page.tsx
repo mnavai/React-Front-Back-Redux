@@ -31,7 +31,7 @@ const registerSchema = object({
     passwordConfirm: string().min(1, 'Passwrd is requird')
 }).refine((data) => data.password === data.passwordConfirm, {
     path: ['passwordConfirm'],
-    message: 'Passwords do not match !'
+    message: `Passwords do not match ! `
 });
 
 export type RegisterInput = TypeOf<typeof registerSchema>
@@ -39,10 +39,8 @@ export type RegisterInput = TypeOf<typeof registerSchema>
 const RegisterPage = ()=>{
     const methods = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema)
-    })
-
+    });
     // api call you will have the useRegisterMutation 
-
      const [registerUser, {isLoading,isSuccess,error,isError,data}]=useRegisterUserMutation()
      const navigate = useNavigate()
      const {reset, handleSubmit, formState:{isSubmitSuccessful},}= methods;
@@ -51,7 +49,9 @@ const RegisterPage = ()=>{
      // this was specially for the errors if the form is successfully submitted 
      // it is possible we get errors from backend 
      useEffect(()=>{
+        console.log("Inside Use Effect")
         if(isSuccess) {
+            
             toast.success(data?.message)
             navigate('/verifyemail')
         }
@@ -69,17 +69,19 @@ const RegisterPage = ()=>{
         }
      },[isLoading])
 
-
+     console.log("After Use Effect",isLoading)
      useEffect(()=>{
         if(isSubmitSuccessful){
             reset();
         }
      },[])
-
-     const onSubmitHandeler: SubmitHandler<RegisterInput>=(values)=>{
+     console.log("After Use Effect 2 ")
+     console.log(methods)
+     const onSubmitHandler: SubmitHandler<RegisterInput>=(values)=>{
         alert('Working')
         registerUser(values)
      }
+        
 
      return(
         <Container
@@ -96,16 +98,22 @@ const RegisterPage = ()=>{
             flexDirection:'column'}
         }>
                 <Typography> Welcome to my Registration</Typography>
-                <FormProvider {...methods}>
-                       <Box
+               
+
+               <FormProvider {...methods}>
+
+               <form onSubmit={handleSubmit(onSubmitHandler)}>
+                
+                       {/* <Box
                         component='form'
                        noValidate
-                       onSubmit={handleSubmit(onSubmitHandeler)}
-                       >
+                       width=''
+                       onSubmit={()=>{alert("Working")}}
+                       > */}
                                 <FormInput name='name' label='full name'></FormInput>
-                                <FormInput name='email' label='enter the email'></FormInput>
-                                <FormInput name='password' label='enter the password'></FormInput>
-                                <FormInput name='passwordConfirm' label='enter the password'></FormInput>
+                                <FormInput name='email' type="email" label='enter the email'></FormInput>
+                                <FormInput name='password' type="password" label='enter the password'></FormInput>
+                                <FormInput name='passwordConfirm' type="password" label='enter the password'></FormInput>
 
                                 <LoadingButton
                                 variant="contained"
@@ -114,7 +122,10 @@ const RegisterPage = ()=>{
                                 fullWidth>
                                     Sign Up
                                 </LoadingButton>
-                       </Box>
+                       {/* </Box> */}
+                       <button>click</button>
+
+               </form>
                 </FormProvider>
             </Box>
             
