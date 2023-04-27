@@ -1,12 +1,23 @@
 import { SubmitHandler, useForm,FormProvider } from "react-hook-form";
 import { object, string, TypeOf } from "zod"
+import {styled} from "@mui/material/styles"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import userEvent from "@testing-library/user-event";
 import { Container, Box, Typography } from "@mui/material";
+import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { useRegisterUserMutation } from "../redux/api/authApi";
+import FormInput from "../components/FormInput";
+
+
+
+const LoadingButton= styled(_LoadingButton)`
+background-color:black
+`
+
+
 
 // just for defining the schema for the UI we are creating that schema will 
 // help us in validating the data effortlessly 
@@ -26,7 +37,7 @@ const registerSchema = object({
 export type RegisterInput = TypeOf<typeof registerSchema>
 
 const RegisterPage = ()=>{
-    const methoods = useForm<RegisterInput>({
+    const methods = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema)
     })
 
@@ -34,7 +45,7 @@ const RegisterPage = ()=>{
 
      const [registerUser, {isLoading,isSuccess,error,isError,data}]=useRegisterUserMutation()
      const navigate = useNavigate()
-     const {reset, handleSubmit, formState:{isSubmitSuccessful},}= methoods;
+     const {reset, handleSubmit, formState:{isSubmitSuccessful},}= methods;
 
 
      // this was specially for the errors if the form is successfully submitted 
@@ -66,6 +77,7 @@ const RegisterPage = ()=>{
      },[])
 
      const onSubmitHandeler: SubmitHandler<RegisterInput>=(values)=>{
+        alert('Working')
         registerUser(values)
      }
 
@@ -78,10 +90,32 @@ const RegisterPage = ()=>{
             height: '100vh',
             backgroundColor: '#2363eb',}
         }>
-            <Box>
+            <Box sx={{ display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',            
+            flexDirection:'column'}
+        }>
                 <Typography> Welcome to my Registration</Typography>
+                <FormProvider {...methods}>
+                       <Box
+                        component='form'
+                       noValidate
+                       onSubmit={handleSubmit(onSubmitHandeler)}
+                       >
+                                <FormInput name='name' label='full name'></FormInput>
+                                <FormInput name='email' label='enter the email'></FormInput>
+                                <FormInput name='password' label='enter the password'></FormInput>
+                                <FormInput name='passwordConfirm' label='enter the password'></FormInput>
 
-                <FormProvider {...methoods}></FormProvider>
+                                <LoadingButton
+                                variant="contained"
+                                loading={isLoading}
+                                disableElevation
+                                fullWidth>
+                                    Sign Up
+                                </LoadingButton>
+                       </Box>
+                </FormProvider>
             </Box>
             
         </Container>

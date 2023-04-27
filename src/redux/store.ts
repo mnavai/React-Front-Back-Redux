@@ -1,7 +1,6 @@
 
 import {configureStore} from "@reduxjs/toolkit"
-import exp from "constants";
-import { type } from "os";
+import {authApi} from "./api/authApi"
 import {TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 
@@ -11,9 +10,14 @@ import {TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 // creatrStore
 
 export const store = configureStore({
-    reducer:{},
+    reducer:{
+        [authApi.reducerPath]:authApi.reducer
+    
+    },
     devTools:process.env.NODE_ENV==='development',
-    middleware:(getDefaultMiddleware)=>getDefaultMiddleware({}).concat([]),
+    middleware:(getDefaultMiddleware)=>getDefaultMiddleware({}).concat([
+        authApi.middleware
+    ]),
 })
 
 // as we are working with type Script so we need to extract "ROOTSTATE" and APPSUDPATCH from the store 
@@ -22,6 +26,6 @@ export type AppDispatch = typeof store.dispatch;
 
 // here we are creating appdipatch and selector
 // to send someting to the store 
-export const useAppDispatch = typeof useDispatch<AppDispatch>();
+export const useAppDispatch = ()=> useDispatch<AppDispatch>();
 // to read someting fom the syore
 export const useAppSelector : TypedUseSelectorHook<RootState>= useSelector
