@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
-import {FormHelperText, Input,Typography ,InputProps, FormControl } from "@mui/material"
+import { FormHelperText, Input, Typography, InputProps, FormControl } from "@mui/material"
 type IFormInputProps = {
     name: string;
     label: string;
@@ -18,18 +18,18 @@ const FormInput: FC<IFormInputProps> = ({ name, label, ...otherProps }) => {
             defaultValue=""
             name={name}
             render={({ field }) => (
-                <FormControl>
-                    <Typography>{label}</Typography>
-                    <Input 
-                    {...field}
-                    fullWidth
-                    disableUnderline
-                    error={!!errors[name]}
-                    {...otherProps}
+                <FormControl fullWidth sx={{mb:2}}>
+                    <Typography sx={{color:'black'}} >{label}</Typography>
+                    <Input sx={{backgroundColor:"white"}}
+                        {...field}
+                        fullWidth
+                        disableUnderline
+                        error={!!errors[name]}
+                        {...otherProps}
                     />
                     <FormHelperText error={!!errors[name]}>
-                        {errors[name]?(errors[name]?.message as unknown as string):""}
-                    </FormHelperText> 
+                        {errors[name] ? (errors[name]?.message as unknown as string) : ""}
+                    </FormHelperText>
                 </FormControl>
             )}
         />

@@ -1,7 +1,7 @@
-import { SubmitHandler, useForm,FormProvider } from "react-hook-form";
+import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
 import { object, string, TypeOf } from "zod"
-import {styled} from "@mui/material/styles"
-import {zodResolver} from "@hookform/resolvers/zod"
+import { styled } from "@mui/material/styles"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ import FormInput from "../components/FormInput";
 
 
 
-const LoadingButton= styled(_LoadingButton)`
+const LoadingButton = styled(_LoadingButton)`
 background-color:black
 `
 
@@ -36,80 +36,100 @@ const registerSchema = object({
 
 export type RegisterInput = TypeOf<typeof registerSchema>
 
-const RegisterPage = ()=>{
+const RegisterPage = () => {
     const methods = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema)
     });
     // api call you will have the useRegisterMutation 
-     const [registerUser, {isLoading,isSuccess,error,isError,data}]=useRegisterUserMutation()
-     const navigate = useNavigate()
-     const {reset, handleSubmit, formState:{isSubmitSuccessful},}= methods;
+    const [registerUser, { isLoading, isSuccess, error, isError, data }] = useRegisterUserMutation()
+    const navigate = useNavigate()
+    const { reset, handleSubmit, formState: { isSubmitSuccessful }, } = methods;
 
 
-     // this was specially for the errors if the form is successfully submitted 
-     // it is possible we get errors from backend 
-     useEffect(()=>{
+    // this was specially for the errors if the form is successfully submitted 
+    // it is possible we get errors from backend 
+    useEffect(() => {
         console.log("Inside Use Effect")
-        if(isSuccess) {
-            
+        if (isSuccess) {
+
             toast.success(data?.message)
             navigate('/verifyemail')
         }
         // is ERROR gets you a list of items as we are in type Script so we are following any so that we could 
         // handle any type here 
-        if(isError){
-            if(Array.isArray((error as any).data.error)){
-                (error as any).data.error.array.forEach((element:any) => {
-                    toast.error(element.message,{position:'top-right'})
+        if (isError) {
+            if (Array.isArray((error as any).data.error)) {
+                (error as any).data.error.array.forEach((element: any) => {
+                    toast.error(element.message, { position: 'top-right' })
                 });
             }
-            else{
-                toast.error((error as any).data.message,{position:'top-right'})
+            else {
+                toast.error((error as any).data.message, { position: 'top-right' })
             }
         }
-     },[isLoading])
+    }, [isLoading])
 
-     console.log("After Use Effect",isLoading)
-     useEffect(()=>{
-        if(isSubmitSuccessful){
+    console.log("After Use Effect", isLoading)
+    useEffect(() => {
+        if (isSubmitSuccessful) {
             reset();
         }
-     },[])
-     console.log("After Use Effect 2 ")
-     console.log(methods)
-     const onSubmitHandler: SubmitHandler<RegisterInput>=(values)=>{
+    }, [])
+    console.log("After Use Effect 2 ")
+    console.log(methods)
+    const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
         alert('Working')
         registerUser(values)
-     }
-        
+    }
 
-     return(
+
+    return (
         <Container
-        maxWidth={false} 
-        sx={{ display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-            backgroundColor: '#2363eb',}
-        }>
-            <Box sx={{ display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',            
-            flexDirection:'column'}
-        }>
+            maxWidth={false}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                backgroundColor: '#2363eb',
+            }
+            }>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }
+            }>
                 <Typography> Welcome to my Registration</Typography>
-               
 
-               <FormProvider {...methods}>
 
-               <form onSubmit={handleSubmit(onSubmitHandler)}>
-                
-                       {/* <Box
+                <FormProvider {...methods}>
+                    <Box
                         component='form'
-                       noValidate
-                       width=''
-                       onSubmit={()=>{alert("Working")}}
-                       > */}
+                        noValidate
+                        width='100%'
+                        onSubmit={handleSubmit(onSubmitHandler)}
+                    >
+                        <FormInput name='name' label='full name'></FormInput>
+                        <FormInput name='email' type="email" label='enter the email'></FormInput>
+                        <FormInput name='password' type="password" label='enter the password'></FormInput>
+                        <FormInput name='passwordConfirm' type="password" label='enter the password'></FormInput>
+
+                        <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            loading={isLoading}
+                            disableElevation
+                            fullWidth>
+                            Sign Up
+                        </LoadingButton>
+
+                    </Box>
+
+                    {/* <form onSubmit={handleSubmit(onSubmitHandler)}>
+                
+                       
                                 <FormInput name='name' label='full name'></FormInput>
                                 <FormInput name='email' type="email" label='enter the email'></FormInput>
                                 <FormInput name='password' type="password" label='enter the password'></FormInput>
@@ -122,15 +142,15 @@ const RegisterPage = ()=>{
                                 fullWidth>
                                     Sign Up
                                 </LoadingButton>
-                       {/* </Box> */}
+                     
                        <button>click</button>
 
-               </form>
+               </form> */}
                 </FormProvider>
             </Box>
-            
+
         </Container>
-     )
+    )
 
 }
 
