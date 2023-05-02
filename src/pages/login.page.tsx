@@ -84,19 +84,15 @@ const LoginPage = () => {
             component="form"
             noValidate
             width="100%"
-            onSubmit={handleSubmit(onSubmitHandler)}
-          >
+            onSubmit={handleSubmit(onSubmitHandler)}>
             <FormInput name="email" type="email" label="Enter your email" />
             <FormInput name="password" type="password" label="Enter your password" />
-
             <LoadingButton
               type="submit"
               variant="contained"
               loading={isLoading}
               disableElevation
-              fullWidth
-            >
-              Login
+              fullWidth>Login
             </LoadingButton>
           </Box>
         </FormProvider>
