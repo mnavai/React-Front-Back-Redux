@@ -38,11 +38,15 @@ const LoginPage = () => {
   // Handle success and error messages
   useEffect(() => {
     if (isSuccess) {
+      console.log(isSuccess)
+      console.log(data)
       toast.success(data?.message);
-      navigate("/");
+      navigate("/dashboard");
     }
 
     if (isError) {
+      console.log(isSuccess)
+      console.log(data)
       toast.error((error as any).data.message, { position: "top-right" });
     }
   }, [isLoading]);
